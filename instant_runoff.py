@@ -10,15 +10,12 @@ with open(input_filename) as inputfile:
 	for line in inputfile:
 		data.append(line.rstrip())
 
-
-
 candidates = []
 candidate_parser = csv.reader(data[0], skipinitialspace=True)
 
 for i in candidate_parser:
 	candidates.append(i)
 
-#print candidates
 for i in range(0, len(candidates)):
 	if i<len(candidates) and candidates[i] == ['', '']:
 		candidates = candidates[:i] + candidates[i+1:]
@@ -44,7 +41,6 @@ for i in range(0, len(ballots)):
 	for j in range(0, len(ballots[i])):
 		ballots[i][j]= ballots[i][j][0]
 	ballots[i] = ballots[i][1:]
-#print ballots
 
 #count the number of #1 scores
 #also, keep track of which candidate each ballot's vote is assigned to. For now, each one is assigned to their #1 vote
@@ -64,13 +60,10 @@ def tiebreaker_heuristic(candidates_rankings):
 		score += (len(candidates)-int(rank))
 	return score
 
-
-#print(len(candidates), num_to_accept)
-
-#now start eliminating canddiates and redistributing their votes
+#now start eliminating candiates and redistributing their votes
 num_iterations = 0
 while len(candidates) > num_to_accept:
-	#first choose who to eliminate
+	#Choose who to eliminate by selecting the person with the least assigned votes
 	min_score_candidates = []
 	min_score = vote_counts[candidates[0]]
 	for i in candidates:
@@ -81,6 +74,7 @@ while len(candidates) > num_to_accept:
 			min_score_candidates = [i]
 	print "After " + str(num_iterations) + " iterations, candidates: ", min_score_candidates, " each have " + str(min_score) + " votes." 
 	
+	#break ties with the heuristic function
 	min_heuristic_result = len(candidates)**2
 	min_heuristic_candidate = ""
 	min_heuristic_candidate_loc = -1
@@ -88,7 +82,7 @@ while len(candidates) > num_to_accept:
 		loc = -1
 		scores_for_this_candidate = []
 		for i in range(0, len(candidates)):
-			if candidates[i] == candidate: #possible bug here-- check
+			if candidates[i] == candidate:
 				loc = i
 
 		for i in range(0, len(ballots)):
@@ -130,4 +124,3 @@ while len(candidates) > num_to_accept:
 	
 print "The final results are:"
 print vote_counts
-#while len(vote_counts) > num_to_accept:

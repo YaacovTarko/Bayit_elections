@@ -18,7 +18,6 @@ candidate_parser = csv.reader(data[0], skipinitialspace=True)
 for i in candidate_parser:
 	candidates.append(i)
 
-#print candidates
 for i in range(0, len(candidates)):
 	if i<len(candidates) and candidates[i] == ['', '']:
 		candidates = candidates[:i] + candidates[i+1:]
