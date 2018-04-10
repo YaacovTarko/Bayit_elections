@@ -1,7 +1,9 @@
 import sys
 
 input_filename = sys.argv[1]
-num_to_accept = int(sys.argv[2])
+num_to_accept = -1
+if len(sys.argv) > 2:
+	num_to_accept = int(sys.argv[2])
 
 import csv
 
@@ -43,29 +45,24 @@ for i in range(0, len(ballots)):
 		ballots[i][j]= ballots[i][j][0]
 	ballots[i] = ballots[i][1:]
 
-
 def counting_heuristic(candidates_rankings):
 	score=0
 	for rank in candidates_rankings:
 		score += (len(candidates)-int(rank))
 	return score
 
+def heuristic_compare(candidate1, candidate2):
+	return counting_heuristic(vote_counts[candidate1]) - counting_heuristic(vote_counts[candidate2])
+
 for ballot in ballots:
 	for i in range(0, len(ballot)):
 		vote_counts[candidates[i]].append(ballot[i])
 
-winners = []
+candidates.sort(cmp=heuristic_compare)
 
-while len(winners) < num_to_accept:
-	max_heuristic = 0
-	max_heuristic_candidate = "none"
-	max_heuristic_candidate_loc = -1
-	for i in range(0, len(candidates)):
-		current_val = counting_heuristic(vote_counts[candidates[i]])
-		if current_val > max_heuristic:
-			max_heuristic = current_val
-			max_heuristic_candidate = candidates[i]
-			max_heuristic_candidate_loc = i
-	winners.append(max_heuristic_candidate)
-	candidates = candidates[:max_heuristic_candidate_loc] + candidates[max_heuristic_candidate_loc+1:]
-print winners
+if num_to_accept > 0:
+	for candidate in candidates[-num_to_accept:]:
+		print candidate, counting_heuristic(vote_counts[candidate])
+else:
+	for candidate in candidates:
+		print candidate, counting_heuristic(vote_counts[candidate])
