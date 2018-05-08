@@ -16,12 +16,16 @@ candidate_parser = csv.reader(data[0], skipinitialspace=True)
 for i in candidate_parser:
 	candidates.append(i)
 
+
 for i in range(0, len(candidates)):
 	if i<len(candidates) and candidates[i] == ['', '']:
 		candidates = candidates[:i] + candidates[i+1:]
 candidates = candidates[1:]
 for i in range(0, len(candidates)):
 	candidates[i] = candidates[i][0]
+
+print candidates
+
 
 vote_counts = {}
 for i in range(0, len(candidates)):
@@ -73,11 +77,12 @@ while len(candidates) > num_to_accept:
 			min_score = vote_counts[i]
 			min_score_candidates = [i]
 	print "After " + str(num_iterations) + " iterations, candidates: ", min_score_candidates, " each have " + str(min_score) + " votes." 
-	
+
 	#break ties with the heuristic function
-	min_heuristic_result = len(candidates)**2
+	min_heuristic_result = len(candidates)* len(data)
 	min_heuristic_candidate = ""
 	min_heuristic_candidate_loc = -1
+
 	for candidate in min_score_candidates:
 		loc = -1
 		scores_for_this_candidate = []
@@ -107,7 +112,6 @@ while len(candidates) > num_to_accept:
 						if int(rank) == max_rank:
 							next_candidate = candidates[j]
 					max_rank += 1 
-				print "Assigning one vote to: ", next_candidate
 				ballot_vote_assignments[i] = next_candidate
 				vote_counts[next_candidate] += 1
 
